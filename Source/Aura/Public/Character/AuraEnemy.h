@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacter, public IEnemyInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 {
 	GENERATED_BODY()
 
