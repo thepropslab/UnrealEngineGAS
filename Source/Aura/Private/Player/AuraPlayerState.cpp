@@ -11,6 +11,7 @@ AAuraPlayerState::AAuraPlayerState()
 	// Create the ability system component, attribute set andm ake sure they replicate
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 	
 	// How often the server will try to update clients (want updating fast for GAS)
