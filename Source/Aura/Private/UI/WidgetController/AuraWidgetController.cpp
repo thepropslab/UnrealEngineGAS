@@ -3,3 +3,11 @@
 
 #include "UI/WidgetController/AuraWidgetController.h"
 
+// Pass in the structure to this function, and use it to set the member variables
+void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
+{
+	PlayerController = WCParams.PlayerController;
+	PlayerState = WCParams.PlayerState;
+	AbilitySystemComponent = WCParams.AbilitySystemComponent;
+	AttributeSet = WCParams.AttributeSet;
+}
