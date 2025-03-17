@@ -11,3 +11,7 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+// Only used in classes that derive from this class
+void UAuraWidgetController::BroadcastInitialValues()
+{
+}

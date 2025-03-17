@@ -27,12 +27,8 @@ struct FWidgetControllerParams
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
-
-
 };
-/**
- * 
- */
+
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject
 {
@@ -41,7 +37,7 @@ class AURA_API UAuraWidgetController : public UObject
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
-	
+	virtual void BroadcastInitialValues();
 protected:
 	// Four objects that the controller may need access to in order to operate
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
