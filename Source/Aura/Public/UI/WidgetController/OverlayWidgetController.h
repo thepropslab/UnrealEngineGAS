@@ -11,6 +11,8 @@ struct FOnAttributeChangeData;
 // declaring a delegate that can broadcast health and max health
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
@@ -26,10 +28,17 @@ public:
 	FOnHealthChangedSignature OnHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
 	FOnMaxHealthChangedSignature OnMaxHealthChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
+	FOnMaxHealthChangedSignature OnManaChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
+	FOnMaxHealthChangedSignature OnMaxManaChanged;
 
 protected:
 	// These functions MUST have this signature in order to work with the attirbute change delegate
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
+	void ManaChanged(const FOnAttributeChangeData& Data) const;
+	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	
 };
+

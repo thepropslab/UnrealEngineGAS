@@ -12,8 +12,9 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
-
-
+	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
+	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
+	
 }
 // Delegate that is called every time an attribute is changed
 void UOverlayWidgetController::BindCallbacksToDependencies()
@@ -26,16 +27,34 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		AuraAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
 
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		AuraAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		AuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
 {
-	// Tell the widgets bound to onhealthchanged to fire off
+	// Tell the callback bound to onhealthchanged to fire off
 	OnHealthChanged.Broadcast(Data.NewValue);
 }
 
 void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
-	// Tell the widgets bound to onmaxhealthchanged to fire off
+	// Tell the callback bound to onmaxhealthchanged to fire off
 	OnMaxHealthChanged.Broadcast(Data.NewValue);
 }
+
+void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
+{
+	// Tell the callback  bound to OnManaChanged to fire off
+	OnManaChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+{
+	// Tell the callback  bound to OnManaChanged to fire off
+	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
