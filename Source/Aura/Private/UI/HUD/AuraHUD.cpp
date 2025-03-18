@@ -11,7 +11,7 @@
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	// Create widget and widget controller
-	checkf(OverlayWidgetClass, TEXT("Overlay widget class uninitiazied. pPleae fill out bp aura hud"));
+	checkf(OverlayWidgetClass, TEXT("Overlay widget class uninitiazied. please fill out bp aura hud"));
 	checkf(OverlayWidgetControllerClass, TEXT("Overlay widget controller class uninitiazied. pPleae fill out bp aura hud"));
 
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
@@ -36,6 +36,10 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+
+		// Once we have set the controller params, bind the listen delegates and callbacks for any attribute changes
+		OverlayWidgetController->BindCallbacksToDependencies();
+		
 
 		return OverlayWidgetController;
 	}
