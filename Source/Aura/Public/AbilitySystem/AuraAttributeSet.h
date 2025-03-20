@@ -25,6 +25,8 @@ public:
 	// Function to enable replication of variables
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	
 	// These are the attributes that we want our characters to have
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
