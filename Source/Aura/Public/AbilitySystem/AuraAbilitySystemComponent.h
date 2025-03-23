@@ -6,6 +6,9 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
+// delegate for broadcasting changes in gameplay tags
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*Asset tags*/);
+
 /**
  * 
  */
@@ -18,7 +21,8 @@ public:
 
 	// function to call as soon as something is initialized, lettinh system know its time to bind to function
 	void AbilityActorInfoSet();
-	
+
+	FEffectAssetTags EffectAssetTags;
 protected:
 
 	// function to bind to the delegate of FOnGameplayEffecTAppliedDelegate
