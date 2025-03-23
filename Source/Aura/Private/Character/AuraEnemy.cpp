@@ -26,7 +26,13 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	// Set the in owner actor and avatar actor to enemy class
+	InitAbilityActorInfo();
+}
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
 
 void AAuraEnemy::HighlightActor()

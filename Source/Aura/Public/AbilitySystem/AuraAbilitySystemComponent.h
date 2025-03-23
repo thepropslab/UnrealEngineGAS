@@ -13,5 +13,15 @@ UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+
+public:
+
+	// function to call as soon as something is initialized, lettinh system know its time to bind to function
+	void AbilityActorInfoSet();
+	
+protected:
+
+	// function to bind to the delegate of FOnGameplayEffecTAppliedDelegate
+	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 	
 };
