@@ -36,14 +36,18 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 	// bind a lambda function to the EffectAssetTags delegate on the ability system component
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		// this is the signature for a lamba function (which is an anonymous function)
-		[](const FGameplayTagContainer& AssetTags)
+		// this is the signature for a lamba function (which is an anonymous function). square brackets are for member variables/functions.
+		// otherwise it might not know it exists. that is why we have 'this' in the square brackets
+		[this](const FGameplayTagContainer& AssetTags)
 		{
 			// broadcast to our gameplay controller for all of the tags in the gameplay controller
 			for (const FGameplayTag& Tag : AssetTags)
 			{
 				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
 				GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Blue, Msg );
+				
+				// call our template function to return the widget row, so that we can broadcast it to the widget
+				FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 			}
 		}
 	);

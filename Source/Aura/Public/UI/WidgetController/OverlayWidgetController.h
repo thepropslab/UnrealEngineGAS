@@ -61,7 +61,6 @@ protected:
 	// data table to store messages received fro` mgameplay tags
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
-
 	
 	// These functions MUST have this signature in order to work with the attirbute change delegate
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
@@ -69,8 +68,16 @@ protected:
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 
-
-	
+	// create a generic template function that can return rows, based on a gameplay tag. see bottom of this file
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 	
 };
+
+// find the row for a particular tag name
+template <typename T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+}
 
