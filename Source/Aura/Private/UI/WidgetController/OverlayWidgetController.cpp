@@ -43,11 +43,16 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			// broadcast to our gameplay controller for all of the tags in the gameplay controller
 			for (const FGameplayTag& Tag : AssetTags)
 			{
-				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
-				GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Blue, Msg );
-				
+				/* For example, say that Tag = Message.HealthPotion. "Message.HealthPotion".MatchesTag("Message") returns true.
+				 * "Message".MatchesTag("Message.HealthPotion" will return false. e.g. partial match
+				 * In our situation, we just want to check to see if the tag is a message tag specificallty */
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (Tag.MatchesTag(MessageTag))
+				{
 				// call our template function to return the widget row, so that we can broadcast it to the widget
-				FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+				const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+				MessageWidgetRowDelegate.Broadcast(*Row);
+				}
 			}
 		}
 	);

@@ -8,14 +8,6 @@
 #include "UI/Widgets/AuraUserWidget.h"
 #include "OverlayWidgetController.generated.h"
 
-struct FOnAttributeChangeData;
-// want dynamic multicast delegates so we can assign events in blueprints
-// declaring a delegate that can broadcast health and max health
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
-
 // data table that stores tag data, associated message, widget to show, image
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
@@ -35,7 +27,16 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
+struct FOnAttributeChangeData;
+// want dynamic multicast delegates so we can assign events in blueprints
+// declaring a delegate that can broadcast health and max health
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
 
+// delegate for broadcasting the effect tag data to the widget
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
 
 UCLASS(BlueprintType, Blueprintable)
@@ -57,6 +58,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
 	FOnMaxHealthChangedSignature OnMaxManaChanged;
 
+	// member variable for our callback function delegate
+	UPROPERTY(BlueprintAssignable, Category = "Messages")
+	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+	
 protected:
 	// data table to store messages received fro` mgameplay tags
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
