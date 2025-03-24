@@ -29,11 +29,8 @@ struct FUIWidgetRow : public FTableRowBase
 
 struct FOnAttributeChangeData;
 // want dynamic multicast delegates so we can assign events in blueprints
-// declaring a delegate that can broadcast health and max health
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
+// declaring a delegate that can broadcast attribute changes
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 
 // delegate for broadcasting the effect tag data to the widget
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
@@ -50,29 +47,23 @@ public:
 	// Create OnHealthChanged delegate with the delegate type/signature that was passi nto the delegates above
 	// these delegates will bound in blueprints. anything that has access to the widget controller can access
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
-	FOnHealthChangedSignature OnHealthChanged;
+	FOnAttributeChangedSignature OnHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
-	FOnMaxHealthChangedSignature OnMaxHealthChanged;
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
-	FOnMaxHealthChangedSignature OnManaChanged;
+	FOnAttributeChangedSignature OnManaChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Gas|Attributes")
-	FOnMaxHealthChangedSignature OnMaxManaChanged;
+	FOnAttributeChangedSignature OnMaxManaChanged;
 
 	// member variable for our callback function delegate
 	UPROPERTY(BlueprintAssignable, Category = "Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 	
 protected:
-	// data table to store messages received fro` mgameplay tags
+	// data table to store messages received from gameplay tags
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 	
-	// These functions MUST have this signature in order to work with the attirbute change delegate
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void ManaChanged(const FOnAttributeChangeData& Data) const;
-	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
-
 	// create a generic template function that can return rows, based on a gameplay tag. see bottom of this file
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
