@@ -33,7 +33,11 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-
 	
 	virtual void InitAbilityActorInfo();
+
+	// Functionality for a character to set their own initial primary attribute values
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+	void InitializePrimaryAttributes() const;
 };
