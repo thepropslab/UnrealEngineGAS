@@ -26,7 +26,7 @@ public:
 protected:
 
 	// Construct this in player state for aura, but construct in aura enemy class.
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere	)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
