@@ -60,6 +60,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 		}
 	}
 	// Apply the gameplay effect from the parent aura character class that sets the default primary values
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 	
 }
