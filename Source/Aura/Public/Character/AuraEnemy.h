@@ -19,12 +19,17 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Character Class Defaults")
+	int32 Level = 1;
 public:
 	AAuraEnemy();
 
-
+	/* Combat interface functions */
+	virtual int32 GetPlayerLevel() override;
+	/** End combat Interface */
+	
 	/* Enemy interface functions */
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-
+	/** End Enemy Interface */
 };
