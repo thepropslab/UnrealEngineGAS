@@ -38,5 +38,5 @@ float UMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectS
 	const int32 PlayerLevel = CombatInterface->GetPlayerLevel();
 
 	// the calculation for maximum health
-	return 40.f + 1.5f * Intelligence + 10.f * PlayerLevel;
+	return 50.f + 2.5f * Intelligence + 15.f * PlayerLevel;
 }
