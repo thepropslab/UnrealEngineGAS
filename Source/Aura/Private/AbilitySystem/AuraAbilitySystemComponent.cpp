@@ -9,16 +9,6 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	// bind our function to the delegate
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApplied);
-
-	// test code to access gameplay tags
-	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		10,
-		FColor::Orange,
-		FString::Printf(TEXT("Tag %s"), *GameplayTags.Attributes_Secondary_Armor.ToString())
-		);
-	
 }
 
 // a callback function that is called whenever a gameplay effect is applied to somethin that has this ASC
