@@ -14,6 +14,11 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+// just to hide some nasties in the code. template fucntion, capable of storing a fucntion poitner which stores the address
+// of a function of ANY function signature.
+template<class T>
+using TStaticFuncPointer = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 // struct for storing data about a gameplay effect
 USTRUCT(BlueprintType)
 struct FEffectProperties
@@ -51,7 +56,6 @@ struct FEffectProperties
 };
 
 
-
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet
 {
@@ -65,6 +69,11 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	// map the gameplay tags to function pointers. the functions return an FGameplayAttribute.
+	// its basically a variable that runs a function, which returns a gameplay attribute.
+	// dont have to understand how it works as its complex, but we are using it to pass fucntions directly into a map.
+	TMap<FGameplayTag, TStaticFuncPointer<FGameplayAttribute()>> TagsToAttributes;
+	
 	/*
 	 *	Primary character attributes
 	 */
