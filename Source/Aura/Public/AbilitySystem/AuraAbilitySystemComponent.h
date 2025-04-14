@@ -23,6 +23,8 @@ public:
 	void AbilityActorInfoSet();
 
 	FEffectAssetTags EffectAssetTags;
+
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 protected:
 
 	// function to bind to the delegate of FOnGameplayEffecTAppliedDelegate
