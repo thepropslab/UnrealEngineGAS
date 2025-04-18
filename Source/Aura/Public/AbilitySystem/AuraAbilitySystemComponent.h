@@ -25,6 +25,10 @@ public:
 	FEffectAssetTags EffectAssetTags;
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+
+	// functions to be called when ability button is pressed/released, called from controller
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 protected:
 
 	// function to bind to the delegate of FOnGameplayEffecTAppliedDelegate
