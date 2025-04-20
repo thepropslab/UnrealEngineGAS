@@ -2,7 +2,6 @@
 
 
 #include "Player/AuraPlayerController.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
@@ -16,7 +15,6 @@
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
-
 	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
@@ -25,7 +23,6 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 	CursorTrace();
 	AutoRun();
-
 }
 
 // behaviour for the auto running of character along spline traces
@@ -49,8 +46,6 @@ void AAuraPlayerController::AutoRun()
 
 void AAuraPlayerController::CursorTrace()
 {
-	// Get the hit result under the cursor from the player controller
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
 	// If nothing is hit, return. Otherwise cast to see if it has the hit interface
 	if (!CursorHit.bBlockingHit) return;
@@ -58,52 +53,11 @@ void AAuraPlayerController::CursorTrace()
 	LastActor = ThisActor;
 	ThisActor = CursorHit.GetActor();
 
-	/**
-	 * Line trace from cursor. There are several scenarios
-	 *	A. LastActor is null && ThisActor is null
-	 *		- No enemy interface, so do nothing
-	 *	B. LastActor is null && ThisActor is valid
-	 *		- Highlight ThisActor
-	 *	C. LastActor is valid && ThisActor is null
-	 *		- UnHighlight LastActor
-	 *	D. Both actors are valid, but LastActor != ThisActor
-	 *		- UnHighlight LastActor && Highlight ThisActor
-	 *	E. Both actors are valid, and the same actor
-	 *		- Do nothing
-	 */
-
-	if (LastActor == nullptr)
+	// functionality for highlighting enemies
+	if (LastActor != ThisActor)
 	{
-		if (ThisActor != nullptr)
-		{
-			// Case B
-			ThisActor->HighlightActor();
-		}
-		else
-		{
-			// Case A - both are null, do nothing
-		}
-	}
-	else // LastActor is valid
-	{
-		if (ThisActor == nullptr)
-		{
-			// Case C
-			LastActor->UnHighlightActor();
-		}
-		else // both actors are valid
-		{
-			if (LastActor != ThisActor)
-			{
-				// Case D
-				LastActor->UnHighlightActor();
-				ThisActor->HighlightActor();
-			}
-			else
-			{
-				//Case E - do nothing
-			}
-		}
+		if (LastActor) LastActor ->UnHighlightActor();
+		if (ThisActor) ThisActor -> HighlightActor();
 	}
 }
 
@@ -115,7 +69,6 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	// if ThisActor is valid, the mouse isnt hovering an enemy so the ability knows to move
 		bTargeting = ThisActor ? true : false;
 		bAutoRunning = false;
-		
 	}
 }
 
@@ -141,7 +94,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	// if it is just a short press of LMB, create a path and move the character along it
 	else
 	{
-		APawn* ControlledPawn = GetPawn();
+		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
 			// function to generate a TArray of vectors to find a path. NEED TO INCLUDE MODULE
@@ -152,7 +105,6 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				for (const FVector& PointLocation : NavPath->PathPoints)
 				{
 					Spline->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), PointLocation, 8.f, 8, FColor::Red, false, 5.f);
 				}
 				// reset the cached destination to the last point on the path, and tell character to autorun
 				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
@@ -192,10 +144,9 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		// track how much time the button has been held down for, cache the locatio nof the mouse cursor and
 		// move the character towards the cached destination
 		FollowTime += GetWorld()->GetDeltaSeconds();
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility,false,Hit))
+		if (CursorHit.bBlockingHit)
 		{
-			CachedDestination = Hit.ImpactPoint;
+			CachedDestination = CursorHit.ImpactPoint;
 		}
 
 		// if we can find a pawn, move it in the direction between the mouse cursor
