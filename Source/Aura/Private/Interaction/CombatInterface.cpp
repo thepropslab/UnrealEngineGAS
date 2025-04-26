@@ -9,3 +9,8 @@ int32 ICombatInterface::GetPlayerLevel()
 	// just a default return - each subclass should implement if it wants somethign different
 	return 0;
 }
+
+FVector ICombatInterface::GetCombatSocketLocation()
+{
+	return FVector();
+}
