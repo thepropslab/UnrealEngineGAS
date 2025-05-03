@@ -21,12 +21,19 @@ void UTargetDataUnderMouse::Activate()
 	}
 	else
 	{
-		//TODO: We are on the server, so listen for target data
+		FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
+		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
+		// bind the function that can be bound to the listen delegate when activate is called on the server
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTargetDataUnderMouse::OnTargetDataReplicatedCallback);
+
+		// if we are too late, and data has already been sent call the callback anyway and determine if we should wait for data
+		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
+		if (!bCalledDelegate)
+		{
+			// tell the server we are still waiting for the data
+			SetWaitingOnRemotePlayerData();
+		}
 	}
-	
-	// get the data and broadcast the delegate with valid data. ability tasks have an owning ability and thus controller
-
-
 }
 
 void UTargetDataUnderMouse::SendMouseCursorData()
@@ -54,6 +61,22 @@ void UTargetDataUnderMouse::SendMouseCursorData()
 		DataHandle,
 		 FGameplayTag(),
 		AbilitySystemComponent->ScopedPredictionKey);
+
+	// Check if we want to broadcast delegates to clients - checks that ability is still active
+	if (ShouldBroadcastAbilityTaskDelegates())
+	{
+		ValidData.Broadcast(DataHandle);
+	}
+}
+
+void UTargetDataUnderMouse::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle,
+	FGameplayTag ActivationTag)
+{
+	/* this function will be called in response to recieving replicated target data. in GAS, a lot of functions
+	 kinda use the term both ways (e.g. client to server via RPCs etc.) */
+
+	// tell the ability system that target data has been received, so we no longer need to store it
+	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 
 	// Check if we want to broadcast delegates to clients - checks that ability is still active
 	if (ShouldBroadcastAbilityTaskDelegates())

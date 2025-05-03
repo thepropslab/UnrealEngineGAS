@@ -30,4 +30,6 @@ private:
 
 	// function to send target data to the server for replication purposes
 	void SendMouseCursorData();
+	
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);
 };
