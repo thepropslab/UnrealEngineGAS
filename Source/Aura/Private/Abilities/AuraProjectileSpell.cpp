@@ -13,7 +13,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UAuraProjectileSpell::SpawnProjectile()
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// spawn a projectile ONLY on the server, then replicate it down to the clients
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -24,11 +24,14 @@ void UAuraProjectileSpell::SpawnProjectile()
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+
+		// get the rotation from the character weapon to the target, making them fly parallel to the gronud
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		Rotation.Pitch = 0.f;
+				
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
-
-		//TODO: Set the projectile rotation
-
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		
 		// spawn actor deferred returns the type passed in. 
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(

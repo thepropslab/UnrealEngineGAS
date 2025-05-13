@@ -84,16 +84,16 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting)
+	if (GetASC())
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		GetASC()->AbilityInputTagReleased(InputTag);
 	}
-	// if it is just a short press of LMB, create a path and move the character along it
-	else
+
+	
+	if (!bTargeting && !bShiftKeyDown)
 	{
+		// if it is just a short press of LMB, create a path and move the character along it
+	
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
@@ -109,9 +109,9 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				// reset the cached destination to the last point on the path, and tell character to autorun
 				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 				bAutoRunning = true;
-				
 			}
 		}
+	
 		// reset the follow time and if we are targeting a character or not
 		FollowTime = 0.f;
 		bTargeting = false;
@@ -131,7 +131,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	}
 
 	// otherwise, if this is the LMB, we are concerned about running or attacking an enemy
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetASC())
 		{
@@ -189,6 +189,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 	// Create the callback calling the move function when the input action value is filled in
 	AuraInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this, &AAuraPlayerController::Move);	
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 
 	// bind the ability input actions
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
