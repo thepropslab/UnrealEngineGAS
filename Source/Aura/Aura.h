@@ -5,3 +5,5 @@
 #include "CoreMinimal.h"
 
 #define CUSTOM_DEPTH_RED 250
+// Create an easy way of referencing a custom gameplay channel
+#define ECC_Projectile ECollisionChannel::ECC_GameTraceChannel1
