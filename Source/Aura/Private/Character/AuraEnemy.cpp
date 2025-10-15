@@ -38,6 +38,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+
+	// temporary incrase of health
+	InitializeDefaultAttributes();
 }
 
 void AAuraEnemy::HighlightActor()
