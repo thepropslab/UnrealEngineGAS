@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacter.h"
 #include "Interaction/EnemyInterface.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
+
+class UWidgetComponent;
 
 /**
  * 
@@ -21,6 +24,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Character Class Defaults")
 	int32 Level = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
+	TObjectPtr<UWidgetComponent> HealthBar;
 public:
 	AAuraEnemy();
 
@@ -32,4 +38,10 @@ public:
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	/** End Enemy Interface */
+
+	// delegate for broadcasting health
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnHealthChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 };
